@@ -18,8 +18,9 @@ def parse_cmd_args():
     parser.add_argument('-m', '--memory', type=int, default=1024,
                         help='The amount of memory in megabytes to eat',
                         required=False)
-    parser.add_argument('-t', '--threads', type=int, default=cpu_count(),
-                        help='The amount of threads to use', required=False)
+    parser.add_argument('-c', '--cores', type=int, default=cpu_count(),
+                        help='The amount of logical cores to stress',
+                        required=False)
     args = parser.parse_args()
     return args
 
@@ -27,8 +28,8 @@ MB = 1024*1024
 
 if __name__ == '__main__':
 
-    threads = parse_cmd_args().threads
+    cores = parse_cmd_args().cores
     mem_eat = "a" * MB * parse_cmd_args().memory
-    print(f"Stressing {threads} cores")
-    pool = Pool(threads)
-    pool.map(stress, range(threads))
+    print(f"Stressing {cores} cores")
+    pool = Pool(cores)
+    pool.map(stress, range(cores))
