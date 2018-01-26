@@ -2,6 +2,9 @@ from multiprocessing import Pool
 from multiprocessing import cpu_count
 import argparse
 import math
+import sys
+
+MB = 1024*1024
 
 
 def stress(x):
@@ -24,12 +27,14 @@ def parse_cmd_args():
     args = parser.parse_args()
     return args
 
-MB = 1024*1024
 
 if __name__ == '__main__':
-
-    cores = parse_cmd_args().cores
-    mem_eat = "a" * MB * parse_cmd_args().memory
+    cores = parse_command_args().cores
+    mem_eat = "L" * MB * parse_command_args().memory
+    if cores > cpu_count():
+        print("Too many threads running! You are only able to run"
+              f" {cpu_count()} threads at a time!")
+        sys.exit(1)
     print(f"Stressing {cores} cores")
     pool = Pool(cores)
     pool.map(stress, range(cores))
